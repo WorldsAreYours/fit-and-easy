@@ -28,12 +28,12 @@ class UserResponse(BaseModel):
     id: int
     name: str
     email: str
-    fitness_level: str
+    fitness_level: FitnessLevel  # Changed from str to FitnessLevel enum
     goals: Optional[str]
     created_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class ExerciseCreate(BaseModel):
@@ -49,11 +49,11 @@ class ExerciseResponse(BaseModel):
     name: str
     muscle_groups: str
     equipment: str
-    difficulty: str
+    difficulty: Difficulty  # Changed from str to Difficulty enum
     instructions: str
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class WorkoutCreate(BaseModel):
@@ -80,7 +80,7 @@ class WorkoutExerciseResponse(BaseModel):
     exercise: ExerciseResponse
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class WorkoutResponse(BaseModel):
@@ -93,7 +93,7 @@ class WorkoutResponse(BaseModel):
     workout_exercises: List[WorkoutExerciseResponse] = []
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class GeneratedWorkout(BaseModel):
