@@ -1,0 +1,11 @@
+fastapi>=0.68.0,<0.90.0
+uvicorn>=0.15.0,<1.0.0
+sqlalchemy>=1.4.0,<2.0.0
+pydantic>=1.8.0,<2.0.0
+python-multipart>=0.0.5
+# For database operations
+aiosqlite>=0.17.0
+# For date handling
+python-dateutil>=2.8.0
+# For email validation
+email-validator>=1.1.0
