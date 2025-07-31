@@ -46,10 +46,12 @@ venv.bak/
 ehthumbs.db
 Thumbs.db
 
-# Database
+# Database (exclude database files but keep initial seed)
 *.db-journal
 *.db-wal
 *.db-shm
+# Exclude database changes after initial commit
+trainer_app.db
 
 # Logs
 *.log
