@@ -1,0 +1,819 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Personal Trainer App API",
+    "description": "Backend API for a personal trainer application with exercise library and workout tracking",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/users": {
+      "post": {
+        "summary": "Create User",
+        "description": "Create a new user profile",
+        "operationId": "create_user_users_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "summary": "Get User",
+        "description": "Get user profile by ID",
+        "operationId": "get_user_users__user_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "User Id",
+              "type": "integer"
+            },
+            "name": "user_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/exercises": {
+      "get": {
+        "summary": "List Exercises",
+        "description": "List exercises with optional filters",
+        "operationId": "list_exercises_exercises_get",
+        "parameters": [
+          {
+            "description": "Filter by muscle group",
+            "required": false,
+            "schema": {
+              "title": "Muscle Group",
+              "type": "string",
+              "description": "Filter by muscle group"
+            },
+            "name": "muscle_group",
+            "in": "query"
+          },
+          {
+            "description": "Filter by equipment",
+            "required": false,
+            "schema": {
+              "title": "Equipment",
+              "type": "string",
+              "description": "Filter by equipment"
+            },
+            "name": "equipment",
+            "in": "query"
+          },
+          {
+            "description": "Filter by difficulty",
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Difficulty"
+                }
+              ],
+              "description": "Filter by difficulty"
+            },
+            "name": "difficulty",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response List Exercises Exercises Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExerciseResponse"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Exercise",
+        "description": "Create a new exercise",
+        "operationId": "create_exercise_exercises_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExerciseCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExerciseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workouts": {
+      "post": {
+        "summary": "Create Workout",
+        "description": "Create a new workout for a user",
+        "operationId": "create_workout_workouts_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "User Id",
+              "type": "integer"
+            },
+            "name": "user_id",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkoutCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkoutResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workouts/{workout_id}/exercises": {
+      "post": {
+        "summary": "Add Exercise To Workout",
+        "description": "Add an exercise to a workout",
+        "operationId": "add_exercise_to_workout_workouts__workout_id__exercises_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Workout Id",
+              "type": "integer"
+            },
+            "name": "workout_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkoutExerciseCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkoutExerciseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workouts/{workout_id}": {
+      "get": {
+        "summary": "Get Workout",
+        "description": "Get workout details with exercises",
+        "operationId": "get_workout_workouts__workout_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Workout Id",
+              "type": "integer"
+            },
+            "name": "workout_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkoutResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/workouts": {
+      "get": {
+        "summary": "Get User Workouts",
+        "description": "Get all workouts for a user",
+        "operationId": "get_user_workouts_users__user_id__workouts_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "User Id",
+              "type": "integer"
+            },
+            "name": "user_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get User Workouts Users  User Id  Workouts Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkoutResponse"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/generate-workout": {
+      "post": {
+        "summary": "Generate Workout",
+        "description": "Generate a simple workout based on user's fitness level and goals.\nThis is a basic implementation that can be enhanced with AI later.",
+        "operationId": "generate_workout_users__user_id__generate_workout_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "User Id",
+              "type": "integer"
+            },
+            "name": "user_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneratedWorkout"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Health check endpoint",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Difficulty": {
+        "title": "Difficulty",
+        "enum": [
+          "easy",
+          "medium",
+          "hard"
+        ],
+        "type": "string",
+        "description": "Enumeration for exercise difficulty levels"
+      },
+      "ExerciseCreate": {
+        "title": "ExerciseCreate",
+        "required": [
+          "name",
+          "muscle_groups",
+          "equipment",
+          "instructions"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "muscle_groups": {
+            "title": "Muscle Groups",
+            "type": "string"
+          },
+          "equipment": {
+            "title": "Equipment",
+            "type": "string"
+          },
+          "difficulty": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Difficulty"
+              }
+            ],
+            "default": "medium"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          }
+        }
+      },
+      "ExerciseResponse": {
+        "title": "ExerciseResponse",
+        "required": [
+          "id",
+          "name",
+          "muscle_groups",
+          "equipment",
+          "difficulty",
+          "instructions"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "muscle_groups": {
+            "title": "Muscle Groups",
+            "type": "string"
+          },
+          "equipment": {
+            "title": "Equipment",
+            "type": "string"
+          },
+          "difficulty": {
+            "title": "Difficulty",
+            "type": "string"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          }
+        }
+      },
+      "FitnessLevel": {
+        "title": "FitnessLevel",
+        "enum": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ],
+        "type": "string",
+        "description": "Enumeration for user fitness levels"
+      },
+      "GeneratedWorkout": {
+        "title": "GeneratedWorkout",
+        "required": [
+          "workout_name",
+          "exercises",
+          "estimated_duration"
+        ],
+        "type": "object",
+        "properties": {
+          "workout_name": {
+            "title": "Workout Name",
+            "type": "string"
+          },
+          "exercises": {
+            "title": "Exercises",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkoutExerciseCreate"
+            }
+          },
+          "estimated_duration": {
+            "title": "Estimated Duration",
+            "type": "integer"
+          }
+        },
+        "description": "Response model for generated workouts"
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "UserCreate": {
+        "title": "UserCreate",
+        "required": [
+          "name",
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "fitness_level": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FitnessLevel"
+              }
+            ],
+            "default": "beginner"
+          },
+          "goals": {
+            "title": "Goals",
+            "type": "string"
+          }
+        }
+      },
+      "UserResponse": {
+        "title": "UserResponse",
+        "required": [
+          "id",
+          "name",
+          "email",
+          "fitness_level",
+          "created_at"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "fitness_level": {
+            "title": "Fitness Level",
+            "type": "string"
+          },
+          "goals": {
+            "title": "Goals",
+            "type": "string"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        }
+      },
+      "WorkoutCreate": {
+        "title": "WorkoutCreate",
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "title": "Notes",
+            "type": "string"
+          }
+        }
+      },
+      "WorkoutExerciseCreate": {
+        "title": "WorkoutExerciseCreate",
+        "required": [
+          "exercise_id"
+        ],
+        "type": "object",
+        "properties": {
+          "exercise_id": {
+            "title": "Exercise Id",
+            "type": "integer"
+          },
+          "sets": {
+            "title": "Sets",
+            "type": "integer",
+            "default": 3
+          },
+          "reps": {
+            "title": "Reps",
+            "type": "integer",
+            "default": 10
+          },
+          "weight": {
+            "title": "Weight",
+            "type": "number"
+          },
+          "rest_time": {
+            "title": "Rest Time",
+            "type": "integer",
+            "default": 60
+          }
+        }
+      },
+      "WorkoutExerciseResponse": {
+        "title": "WorkoutExerciseResponse",
+        "required": [
+          "id",
+          "exercise_id",
+          "sets",
+          "reps",
+          "rest_time",
+          "exercise"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "exercise_id": {
+            "title": "Exercise Id",
+            "type": "integer"
+          },
+          "sets": {
+            "title": "Sets",
+            "type": "integer"
+          },
+          "reps": {
+            "title": "Reps",
+            "type": "integer"
+          },
+          "weight": {
+            "title": "Weight",
+            "type": "number"
+          },
+          "rest_time": {
+            "title": "Rest Time",
+            "type": "integer"
+          },
+          "exercise": {
+            "$ref": "#/components/schemas/ExerciseResponse"
+          }
+        }
+      },
+      "WorkoutResponse": {
+        "title": "WorkoutResponse",
+        "required": [
+          "id",
+          "user_id",
+          "name",
+          "date",
+          "created_at"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "user_id": {
+            "title": "User Id",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "title": "Notes",
+            "type": "string"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string",
+            "format": "date-time"
+          },
+          "workout_exercises": {
+            "title": "Workout Exercises",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkoutExerciseResponse"
+            },
+            "default": []
+          }
+        }
+      }
+    }
+  }
+}
