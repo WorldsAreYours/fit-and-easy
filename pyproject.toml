@@ -1,0 +1,92 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools-scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "personal-trainer-app"
+version = "2.0.0"
+description = "Comprehensive fitness tracking and workout management API"
+authors = [
+    {name = "Personal Trainer App Team", email = "team@personaltrainer.app"},
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+dependencies = [
+    "fastapi>=0.68.0,<0.90.0",
+    "uvicorn>=0.15.0,<1.0.0",
+    "sqlalchemy>=1.4.0,<2.0.0",
+    "pydantic>=1.8.0,<2.0.0",
+    "python-multipart>=0.0.5",
+    "aiosqlite>=0.17.0",
+    "python-dateutil>=2.8.0",
+    "email-validator>=1.1.0",
+    "websockets==10.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0.0",
+    "pytest-asyncio>=0.18.0",
+    "httpx>=0.23.0",
+    "black>=22.0.0",
+    "flake8>=4.0.0",
+    "mypy>=0.950",
+    "pyyaml>=6.0",
+]
+prod = [
+    "gunicorn>=20.1.0",
+    "structlog>=22.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/your-username/fit-and-easy"
+Repository = "https://github.com/your-username/fit-and-easy.git"
+Documentation = "https://github.com/your-username/fit-and-easy#readme"
+
+[project.scripts]
+setup-db = "scripts.setup_database:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*", "database*", "scripts*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py37']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.7"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false

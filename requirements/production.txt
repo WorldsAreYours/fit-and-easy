@@ -1,0 +1,11 @@
+# Production requirements
+-r base.txt
+
+# Production ASGI server
+gunicorn>=20.1.0
+
+# Database (for production use PostgreSQL instead of SQLite)
+# psycopg2-binary>=2.9.0
+
+# Monitoring and logging
+structlog>=22.0.0
